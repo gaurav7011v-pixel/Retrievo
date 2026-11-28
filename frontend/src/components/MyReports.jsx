@@ -292,7 +292,11 @@ function MyReports() {
                     <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-purple-50">
                       {report.imageUrl ? (
                         <img
-                          src={`${api.defaults.baseURL.replace("/api", "")}${report.imageUrl}`}
+                          src={
+                            report.imageUrl.startsWith("http")
+                              ? report.imageUrl
+                              : `${api.defaults.baseURL.replace("/api", "")}${report.imageUrl}`
+                          }
                           alt={report.name}
                           className="h-full w-full object-cover"
                         />

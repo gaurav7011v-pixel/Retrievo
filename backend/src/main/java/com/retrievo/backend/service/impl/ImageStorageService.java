@@ -1,21 +1,24 @@
 package com.retrievo.backend.service.impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class ImageStorageService {
 
-    @Value("${app.upload.dir}")
-    private String uploadDirectory;
+    @Value("${CLOUDINARY_CLOUD_NAME}")
+    private String cloudName;
+
+    @Value("${CLOUDINARY_API_KEY}")
+    private String apiKey;
+
+    @Value("${CLOUDINARY_API_SECRET}")
+    private String apiSecret;
 
     private static final Map<String, String> ALLOWED_TYPES = Map.of(
             "image/jpeg", ".jpg",
@@ -38,27 +41,27 @@ public class ImageStorageService {
         }
 
         try {
-            // Create upload directory if it doesn't exist
-            Path uploadPath = Paths.get(uploadDirectory)
-                    .toAbsolutePath()
-                    .normalize();
+            Cloudinary cloudinary = new Cloudinary(
+                    ObjectUtils.asMap(
+                            "cloud_name", cloudName,
+                            "api_key", apiKey,
+                            "api_secret", apiSecret,
+                            "secure", true
+                    )
+            );
 
-            Files.createDirectories(uploadPath);
+            Map<?, ?> result = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "folder", "retrievo/items",
+                            "resource_type", "image"
+                    )
+            );
 
-            // Generate a unique filename
-            String fileName = UUID.randomUUID()
-                    + ALLOWED_TYPES.get(contentType);
+            return result.get("secure_url").toString();
 
-            Path filePath = uploadPath.resolve(fileName).normalize();
-
-            // Save image
-            Files.copy(file.getInputStream(), filePath);
-
-            // Return the image URL
-            return "/uploads/items/" + fileName;
-
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to upload image", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to upload image to Cloudinary", e);
         }
     }
 }

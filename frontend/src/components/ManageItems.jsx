@@ -386,7 +386,11 @@ function ManageItems() {
                           <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-purple-50">
                             {item.imageUrl ? (
                               <img
-                                src={`${api.defaults.baseURL.replace("/api", "")}${item.imageUrl}`}
+                                src={
+                                  item.imageUrl.startsWith("http")
+                                    ? item.imageUrl
+                                    : `${api.defaults.baseURL.replace("/api", "")}${item.imageUrl}`
+                                }
                                 alt={item.name}
                                 className="h-full w-full object-cover"
                               />
@@ -518,7 +522,11 @@ function ManageItems() {
                 {/* Item Image */}
                 {selectedItem.imageUrl ? (
                   <img
-                    src={`${api.defaults.baseURL.replace("/api", "")}${selectedItem.imageUrl}`}
+                    src={
+                      selectedItem.imageUrl.startsWith("http")
+                        ? selectedItem.imageUrl
+                        : `${api.defaults.baseURL.replace("/api", "")}${selectedItem.imageUrl}`
+                    }
                     alt={selectedItem.name}
                     className="h-56 w-full object-contain bg-gray-100"
                   />

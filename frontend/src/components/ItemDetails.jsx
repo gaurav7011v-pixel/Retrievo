@@ -190,7 +190,11 @@ function ItemDetails() {
             <div className="overflow-hidden rounded-2xl bg-gray-100">
               {item.imageUrl ? (
                 <img
-                  src={`${api.defaults.baseURL.replace("/api", "")}${item.imageUrl}`}
+                  src={
+                    item.imageUrl.startsWith("http")
+                      ? item.imageUrl
+                      : `${api.defaults.baseURL.replace("/api", "")}${item.imageUrl}`
+                  }
                   alt={item.itemName}
                   className="h-72 w-full object-cover md:h-96"
                 />

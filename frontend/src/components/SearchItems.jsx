@@ -202,7 +202,11 @@ function SearchItems() {
 
                                     {item.imageUrl ? (
                                         <img
-                                           src={`${api.defaults.baseURL.replace("/api", "")}${item.imageUrl}`}
+                                            src={
+                                                item.imageUrl.startsWith("http")
+                                                    ? item.imageUrl
+                                                    : `${api.defaults.baseURL.replace("/api", "")}${item.imageUrl}`
+                                            }
                                             alt={item.itemName}
                                             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                                         />

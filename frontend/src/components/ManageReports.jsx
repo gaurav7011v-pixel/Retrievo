@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import api from "../api/axios";
 import AdminLayout from "../layouts/AdminLayout";
 import {
   getAllItemsAdmin,
@@ -505,7 +506,11 @@ function ManageReports() {
 
                   {selectedReport.image ? (
                     <img
-                      src={selectedReport.image}
+                      src={
+                        selectedReport.image.startsWith("http")
+                          ? selectedReport.image
+                          : `${api.defaults.baseURL.replace("/api", "")}${selectedReport.image}`
+                      }
                       alt={selectedReport.itemName}
                       className="h-48 w-full rounded-lg object-cover"
                     />

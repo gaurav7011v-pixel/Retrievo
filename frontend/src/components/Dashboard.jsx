@@ -380,7 +380,9 @@ function Dashboard() {
                   <img
                     src={
                       item.image
-                        ? `${api.defaults.baseURL.replace("/api", "")}${item.image}`
+                        ? item.image.startsWith("http")
+                          ? item.image
+                          : `${api.defaults.baseURL.replace("/api", "")}${item.image}`
                         : "https://placehold.co/300x200?text=No+Image"
                     }
                     alt={item.name}
